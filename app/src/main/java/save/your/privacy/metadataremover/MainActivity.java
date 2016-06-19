@@ -1,7 +1,7 @@
 package save.your.privacy.metadataremover;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
@@ -21,8 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Random;
 
 
@@ -30,8 +28,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private Uri mImageCaptureUri;
 
-    private static final int PICK_FROM_CAMERA = 1;
-    private static final int PICK_FROM_FILE = 2;
+    private static final int PICK_IMAGE = 1;
+    private static final int EXIF_IMAGE = 2;
 
     private String appFolder ="MetadataRemover";
 
@@ -49,13 +47,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createDirIfNotExists(appFolder);
-        Button btn_gallery = (Button) findViewById(R.id.btn_gallery);
-        btn_gallery.setOnClickListener(this);
-        Button btn_camera = (Button) findViewById(R.id.btn_camera);
-        btn_camera.setOnClickListener(this);
-
-        Button scanBtn = (Button)findViewById(R.id.btn_folder);
+        //Set interface elements
+        Button btn_pickImage = (Button) findViewById(R.id.btn_pickImage);
+        btn_pickImage.setOnClickListener(this);
+        Button scanBtn = (Button)findViewById(R.id.btn_seeMetadata);
         scanBtn.setOnClickListener(this);
     }
 
@@ -96,77 +91,25 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) return;
-
         String path     = "";
 
-        if (requestCode == PICK_FROM_FILE) {
-            try {
-                InputStream stream = getContentResolver().openInputStream(data.getData());
-                File fileDst = new File(Environment.getExternalStorageDirectory()+"/"+appFolder,getName());
-                if (fileDst.exists()) {
-                    fileDst.delete();
-                }
-                else
-                {
-                    try {
-                        fileDst.createNewFile();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Problem creating file");
-                    }
-                }
-                FileOutputStream out = new FileOutputStream(fileDst);
-                int read = 0;
-                byte[] bytes = new byte[1024];
-                while((read=stream.read(bytes)) != -1){
-                    out.write(bytes,0,read);
-                }
-                out.close();
-                stream.close();
+        if (requestCode == PICK_IMAGE) {
+
+            Uri imageUri =  data.getData();
+            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            //InputStream stream = getContentResolver().openInputStream(data.getData());
+            File fileDst = new File(imageUri.getPath());
             new RemoveMetadata().execute(fileDst.getAbsolutePath());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
             Toast.makeText(getApplicationContext(),"Removed metadata from the image",Toast.LENGTH_LONG).show();
 
-        } else if (requestCode == PICK_FROM_CAMERA){
-            try {
-                InputStream stream = getContentResolver().openInputStream(mImageCaptureUri);
-                File fileDst = new File(Environment.getExternalStorageDirectory()+"/"+appFolder,getName());
-                if (fileDst.exists()) {
-                    fileDst.delete();
-                }
-                else
-                {
-                    try {
-                        fileDst.createNewFile();
-                    } catch (IOException e) {
-                        Log.e(TAG, "Problem creating file");
-                    }
-                }
-                FileOutputStream out = new FileOutputStream(fileDst);
-                int read = 0;
-                byte[] bytes = new byte[1024];
-                while((read=stream.read(bytes)) != -1){
-                    out.write(bytes,0,read);
-                }
-                out.close();
-                stream.close();
-                new RemoveMetadata().execute(fileDst.getAbsolutePath());
-            } catch (FileNotFoundException e) {
-                Toast.makeText(getApplicationContext(),"Could not remove metadata from the photo",Toast.LENGTH_LONG).show();
-                Log.e(TAG, "FileNotFoundException");
-            } catch (IOException e) {
-                Toast.makeText(getApplicationContext(),"Could not remove metadata from the photo",Toast.LENGTH_LONG).show();
-                Log.e(TAG, "IOException");
-            } finally {
-                File file =new File(mImageCaptureUri.getPath());
-                boolean deleted = file.delete();
-                if (deleted == false){
-                    Toast.makeText(getApplicationContext(),"Could not delete temporary photo file",Toast.LENGTH_LONG).show();
-                }
-            }
+        } else if (requestCode == EXIF_IMAGE){
+
+            Uri imageUri =  data.getData();
+            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            //InputStream stream = getContentResolver().openInputStream(data.getData());
+            File fileDst = new File(imageUri.getPath());
+            new RemoveMetadata().execute(fileDst.getAbsolutePath());
 
             Toast.makeText(getApplicationContext(),"Removed metadata from the photo",Toast.LENGTH_LONG).show();
         }
@@ -176,75 +119,23 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         switch(v.getId())
         {
-            case R.id.btn_gallery:
+            case R.id.btn_pickImage:
                 Intent intentGallery = new Intent();
 
                 intentGallery.setType("image/*");
                 intentGallery.setAction(Intent.ACTION_GET_CONTENT);
 
-                startActivityForResult(Intent.createChooser(intentGallery, "Complete action using"), PICK_FROM_FILE);
+                startActivityForResult(Intent.createChooser(intentGallery, "Complete action using"), PICK_IMAGE);
                 break;
-            case R.id.btn_camera:
-                Intent intentCamera    = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file        = new File(Environment.getExternalStorageDirectory(),
-                        "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
-                mImageCaptureUri = Uri.fromFile(file);
+            case R.id.btn_seeMetadata:
+                Intent intentMetadata = new Intent();
 
-                try {
-                    intentCamera.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                    intentCamera.putExtra("return-data", true);
+                intentMetadata.setType("image/*");
+                intentMetadata.setAction(Intent.ACTION_GET_CONTENT);
 
-                    startActivityForResult(intentCamera, PICK_FROM_CAMERA);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.btn_folder:
-                /*Intent folderIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                File folder = new File(Environment.getExternalStorageDirectory()+"/"+appFolder+"/");
-                folderIntent.setData(Uri.fromFile(folder));
-                //startActivityForResult(folderIntent, 1);*/
-                /*Intent galleryIntent = new Intent();
-                galleryIntent.setAction(android.content.Intent.ACTION_VIEW);
-                //galleryIntent.setType(FILE_TYPE);
-                File folder = new File(Environment.getExternalStorageDirectory()+"/"+appFolder+"/");
-                galleryIntent.setDataAndType(Uri.fromFile(folder),FILE_TYPE);
-                galleryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(galleryIntent);*/
-                String fileDst = Environment.getExternalStorageDirectory()+"/"+appFolder;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
-                        "content:/"+fileDst));//media/internal/images/media"));
-                intent.setType(FILE_TYPE);
-                startActivity(intent);
-
+                startActivityForResult(Intent.createChooser(intentMetadata, "Complete action using"), EXIF_IMAGE);
                 break;
         }
-    }
-
-    public boolean createDirIfNotExists(String path) {
-        boolean ret = true;
-
-        File folder = new File(Environment.getExternalStorageDirectory(), path);
-        if (!folder.exists()) {
-            if (!folder.mkdirs()) {
-                Log.e(TAG, "Problem creating Image folder");
-                ret = false;
-            }
-            else
-            {
-                Log.e(TAG, "Folder created");
-                folder.toString();
-                Log.e(TAG, "Folder: " + folder.toString());
-            }
-        }
-        return ret;
-    }
-
-    private String getName(){
-        Random generator = new Random();
-        int n= 10000;
-        n= generator.nextInt(n);
-        return "Image-"+n+".jpg";
     }
 
     @Override
