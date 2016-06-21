@@ -1,12 +1,11 @@
+
 package save.your.privacy.metadataremover;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,11 +16,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Random;
+import java.util.HashMap;
+
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener,MediaScannerConnectionClient {
@@ -119,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         switch(v.getId())
         {
-            case R.id.btn_pickImage:
+            case R.id.btn_pickImage://test message
                 Intent intentGallery = new Intent();
 
                 intentGallery.setType("image/*");
@@ -160,6 +157,43 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             conn.disconnect();
             conn = null;
         }
+    }
+
+    private HashMap getMetadata(Uri imageUri) {
+        HashMap<String, String> md  = new HashMap<String, String>();
+        try {
+            ExifInterface exifData=new ExifInterface(imageUri.getPath());
+
+            md.put(ExifInterface.TAG_APERTURE,exifData.getAttribute(ExifInterface.TAG_APERTURE));
+            md.put(ExifInterface.TAG_DATETIME,exifData.getAttribute(ExifInterface.TAG_DATETIME));
+            md.put(ExifInterface.TAG_EXPOSURE_TIME,exifData.getAttribute(ExifInterface.TAG_EXPOSURE_TIME));
+            md.put(ExifInterface.TAG_FLASH,exifData.getAttribute(ExifInterface.TAG_FLASH));
+            md.put(ExifInterface.TAG_FOCAL_LENGTH,exifData.getAttribute(ExifInterface.TAG_FOCAL_LENGTH));
+            md.put(ExifInterface.TAG_GPS_ALTITUDE,exifData.getAttribute(ExifInterface.TAG_GPS_ALTITUDE));
+            md.put(ExifInterface.TAG_GPS_ALTITUDE_REF,exifData.getAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF));
+            md.put(ExifInterface.TAG_GPS_LATITUDE,exifData.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
+            md.put(ExifInterface.TAG_GPS_LATITUDE_REF,exifData.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF));
+            md.put(ExifInterface.TAG_GPS_LONGITUDE,exifData.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
+            md.put(ExifInterface.TAG_GPS_LONGITUDE_REF,exifData.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF));
+            md.put(ExifInterface.TAG_GPS_TIMESTAMP,exifData.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP));
+            md.put(ExifInterface.TAG_GPS_PROCESSING_METHOD,exifData.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD));
+            md.put(ExifInterface.TAG_GPS_DATESTAMP,exifData.getAttribute(ExifInterface.TAG_GPS_DATESTAMP));
+            md.put(ExifInterface.TAG_IMAGE_LENGTH,exifData.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
+            md.put(ExifInterface.TAG_IMAGE_WIDTH,exifData.getAttribute(ExifInterface.TAG_IMAGE_WIDTH));
+            md.put(ExifInterface.TAG_ISO,exifData.getAttribute(ExifInterface.TAG_ISO));
+            md.put(ExifInterface.TAG_MAKE,exifData.getAttribute(ExifInterface.TAG_MAKE));
+            md.put(ExifInterface.TAG_MODEL,exifData.getAttribute(ExifInterface.TAG_MODEL));
+            md.put(ExifInterface.TAG_WHITE_BALANCE,exifData.getAttribute(ExifInterface.TAG_WHITE_BALANCE));
+            md.put(ExifInterface.TAG_ORIENTATION,exifData.getAttribute(ExifInterface.TAG_ORIENTATION));
+
+        } catch (IOException ex) {
+            Log.e(TAG, "cannot read exif", ex);
+            Toast.makeText(getApplicationContext(),"cannot clean exif: " + ex.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            Log.w(TAG, "cannot clean exif: ", t);
+            Toast.makeText(getApplicationContext(),"cannot clean exif: " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+        }
+        return md;
     }
 }
 
