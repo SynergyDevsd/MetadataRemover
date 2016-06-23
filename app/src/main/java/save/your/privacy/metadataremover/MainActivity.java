@@ -45,10 +45,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //Set interface elements
-        Button btn_pickImage = (Button) findViewById(R.id.btn_pickImage);
+        Button btn_pickImage = (Button) findViewById(R.id.btn_pickImages);
         btn_pickImage.setOnClickListener(this);
-        Button scanBtn = (Button)findViewById(R.id.btn_seeMetadata);
-        scanBtn.setOnClickListener(this);
+        /*Button scanBtn = (Button)findViewById(R.id.btn_seeMetadata);
+        scanBtn.setOnClickListener(this);*/
     }
 
     private void startScan()
@@ -116,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         switch(v.getId())
         {
-            case R.id.btn_pickImage://test message
+            case R.id.btn_pickImages://test message
                 Intent intentGallery = new Intent();
 
                 intentGallery.setType("image/*");
@@ -124,14 +124,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                 startActivityForResult(Intent.createChooser(intentGallery, "Complete action using"), PICK_IMAGE);
                 break;
-            case R.id.btn_seeMetadata:
+            /*case R.id.btn_seeMetadata:
                 Intent intentMetadata = new Intent();
 
                 intentMetadata.setType("image/*");
                 intentMetadata.setAction(Intent.ACTION_GET_CONTENT);
 
                 startActivityForResult(Intent.createChooser(intentMetadata, "Complete action using"), EXIF_IMAGE);
-                break;
+                break;*/
         }
     }
 
