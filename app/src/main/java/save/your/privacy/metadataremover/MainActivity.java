@@ -13,12 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener,MediaScannerConnectionClient {
@@ -39,17 +43,64 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private MediaScannerConnection conn;
 
+    SimpleAdapter simpleAdpt;
+    List<Map<String, String>> planetsList = new ArrayList<Map<String,String>>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //Set interface elements
-        Button btn_pickImage = (Button) findViewById(R.id.btn_pickImages);
+        Button btn_pickImage = (Button) findViewById(R.id.btn_pickImage);
         btn_pickImage.setOnClickListener(this);
-        /*Button scanBtn = (Button)findViewById(R.id.btn_seeMetadata);
-        scanBtn.setOnClickListener(this);*/
+        Button btn_delMD = (Button)findViewById(R.id.btn_delMD);
+        btn_delMD.setOnClickListener(this);
+        Button btn_pickImageBot = (Button) findViewById(R.id.btn_pickImageBot);
+        btn_pickImageBot.setOnClickListener(this);
+        Button btn_delMDBot = (Button)findViewById(R.id.btn_delMDBot);
+        btn_delMDBot.setOnClickListener(this);
+
+
+        ListView lv = (ListView) findViewById(R.id.lvMetadata);
+
+
+
+
+
+        SimpleAdapter simpleAdpt = new SimpleAdapter(this, planetsList, android.R.layout.simple_list_item_1, new String[] {"planet"}, new int[] {android.R.id.text1});
+
+        lv.setAdapter(simpleAdpt);
+
+
+
+
+
+
+
     }
+    private HashMap<String, String> createPlanet(String key, String name) {
+        HashMap<String, String> planet = new HashMap<String, String>();
+        planet.put(key, name);
+
+        return planet;
+    }
+
+    private void initList() {
+// We populate the planets
+
+        planetsList.add(createPlanet("planet", "Mercury"));
+        planetsList.add(createPlanet("planet", "Venus"));
+        planetsList.add(createPlanet("planet", "Mars"));
+        planetsList.add(createPlanet("planet", "Jupiter"));
+        planetsList.add(createPlanet("planet", "Saturn"));
+        planetsList.add(createPlanet("planet", "Uranus"));
+        planetsList.add(createPlanet("planet", "Neptune"));
+
+
+    }
+
 
     private void startScan()
     {
@@ -95,10 +146,48 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             Uri imageUri =  data.getData();
             //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
             //InputStream stream = getContentResolver().openInputStream(data.getData());
-            File fileDst = new File(imageUri.getPath());
+            HashMap<String, String> md = getMetadata(imageUri);
+            /*File fileDst = new File(imageUri.getPath());
             new RemoveMetadata().execute(fileDst.getAbsolutePath());
 
-            Toast.makeText(getApplicationContext(),"Removed metadata from the image",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Removed metadata from the image",Toast.LENGTH_LONG).show();*/
+            // The data to show
+            /*List<Map<String,String>> testList = new ArrayList<>();
+            testList.add(md);*/
+            planetsList.clear();
+            planetsList.add(md);
+            simpleAdpt.notifyDataSetChanged();
+            /*List<Map<String,String>> testList = new ArrayList<>();
+            for (String key : md.keySet()) {
+                // ...
+                testList.add(key);
+            }
+            for (Map.Entry<String, String> entry : md.entrySet()) {
+                testList.add(new Mapentry);
+                // ...
+            }
+            private HashMap<String, String> listMD(String key, String name) {
+                HashMap<String, String> md = new HashMap<String, String>();
+                md.put(key, name);
+                return md;
+            }*/
+            /*testList.add(md.   md.get(ExifInterface.TAG_APERTURE));
+            testList.add(md.get(ExifInterface.TAG_DATETIME));
+            testList.add(md.get(ExifInterface.TAG_MODEL));*/
+
+            /*private HashMap<String, String> createPlanet(String key, String name) {
+                HashMap<String, String> planet = new HashMap<String, String>();
+                planet.put(key, name);
+
+                return planet;
+            }*/
+            // This is a simple adapter that accepts as parameter
+// Context
+// Data list
+// The row layout that is used during the row creation
+// The keys used to retrieve the data
+// The View id used to show the data. The key number and the view id must match
+
 
         } else if (requestCode == EXIF_IMAGE){
 
@@ -194,6 +283,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             Toast.makeText(getApplicationContext(),"cannot clean exif: " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
         return md;
+    }
+
+    private void listMDValues(HashMap<String,String> md){
+
     }
 }
 
