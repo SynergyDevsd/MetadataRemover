@@ -5,49 +5,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/introText"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/top_text" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_gallery"
-        android:id="@+id/btn_gallery"
-        android:layout_below="@+id/introText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="127dp" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_camera"
-        android:id="@+id/btn_camera"
-        android:layout_centerVertical="true"
+        android:id="@+id/btn_deleteMDAll"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
+    <ExpandableListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_folder"
-        android:id="@+id/btn_folder"
-        android:layout_marginTop="73dp"
-        android:layout_below="@+id/btn_camera"
-        android:layout_alignLeft="@+id/btn_camera"
-        android:layout_alignStart="@+id/btn_camera"
-        android:layout_alignRight="@+id/btn_gallery"
-        android:layout_alignEnd="@+id/btn_gallery" />
+        android:id="@+id/elv_images"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/btn_deleteMDAll"
+        android:headerDividersEnabled="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reminder_text"
-        android:id="@+id/textView"
-        android:layout_below="@+id/btn_folder"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>
