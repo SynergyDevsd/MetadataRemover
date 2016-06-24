@@ -1,6 +1,7 @@
 
 package save.your.privacy.metadataremover;
 
+import android.app.ListFragment;
 import android.content.Intent;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -43,9 +45,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private MediaScannerConnection conn;
 
-    SimpleAdapter simpleAdpt;
-    List<Map<String, String>> planetsList = new ArrayList<Map<String,String>>();
-
+    public static HashMap<String, String> md;
+    public static MDAdapter mdAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,41 +64,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         btn_delMDBot.setOnClickListener(this);
 
 
-        ListView lv = (ListView) findViewById(R.id.lvMetadata);
-
-
-
-
-
-        SimpleAdapter simpleAdpt = new SimpleAdapter(this, planetsList, android.R.layout.simple_list_item_1, new String[] {"planet"}, new int[] {android.R.id.text1});
-
-        lv.setAdapter(simpleAdpt);
-
-
-
-
-
-
-
-    }
-    private HashMap<String, String> createPlanet(String key, String name) {
-        HashMap<String, String> planet = new HashMap<String, String>();
-        planet.put(key, name);
-
-        return planet;
-    }
-
-    private void initList() {
-// We populate the planets
-
-        planetsList.add(createPlanet("planet", "Mercury"));
-        planetsList.add(createPlanet("planet", "Venus"));
-        planetsList.add(createPlanet("planet", "Mars"));
-        planetsList.add(createPlanet("planet", "Jupiter"));
-        planetsList.add(createPlanet("planet", "Saturn"));
-        planetsList.add(createPlanet("planet", "Uranus"));
-        planetsList.add(createPlanet("planet", "Neptune"));
-
+        //ListView lv = (ListView) findViewById(R.id.lvMetadata);
 
     }
 
@@ -146,7 +113,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             Uri imageUri =  data.getData();
             //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
             //InputStream stream = getContentResolver().openInputStream(data.getData());
-            HashMap<String, String> md = getMetadata(imageUri);
+            getMetadata(imageUri);
+            mdAdapter.notifyDataSetChanged();
             /*File fileDst = new File(imageUri.getPath());
             new RemoveMetadata().execute(fileDst.getAbsolutePath());
 
@@ -154,9 +122,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             // The data to show
             /*List<Map<String,String>> testList = new ArrayList<>();
             testList.add(md);*/
-            planetsList.clear();
-            planetsList.add(md);
-            simpleAdpt.notifyDataSetChanged();
+            //planetsList.add(md);
             /*List<Map<String,String>> testList = new ArrayList<>();
             for (String key : md.keySet()) {
                 // ...
@@ -205,7 +171,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         switch(v.getId())
         {
-            case R.id.btn_pickImages://test message
+            case R.id.btn_pickImage://test message
                 Intent intentGallery = new Intent();
 
                 intentGallery.setType("image/*");
@@ -248,11 +214,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         }
     }
 
-    private HashMap getMetadata(Uri imageUri) {
-        HashMap<String, String> md  = new HashMap<String, String>();
+    private void getMetadata(Uri imageUri) {
         try {
             ExifInterface exifData=new ExifInterface(imageUri.getPath());
 
+            md.clear();
             md.put(ExifInterface.TAG_APERTURE,exifData.getAttribute(ExifInterface.TAG_APERTURE));
             md.put(ExifInterface.TAG_DATETIME,exifData.getAttribute(ExifInterface.TAG_DATETIME));
             md.put(ExifInterface.TAG_EXPOSURE_TIME,exifData.getAttribute(ExifInterface.TAG_EXPOSURE_TIME));
@@ -282,11 +248,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             Log.w(TAG, "cannot clean exif: ", t);
             Toast.makeText(getApplicationContext(),"cannot clean exif: " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
-        return md;
     }
 
-    private void listMDValues(HashMap<String,String> md){
+    public static class ListMDFragment extends ListFragment {
 
+        /*public static ListMDFragment newInstance() {
+            return new ListMDFragment();
+        }*/
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
+            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.fragment_list_mda, R.id.text);
+            md.put("key1","value1");
+            md.put("key2","value2");
+            mdAdapter = new MDAdapter(this.getActivity(),md);
+            setListAdapter(mdAdapter);
+            //adapter.addAll(createDataList(100));
+        }
+
+        /*private static List<String> createDataList(int counts) {
+            List<String> list = new ArrayList<String>();
+            for (int i = 0; i < counts; i++) {
+                list.add("i=" + i);
+            }
+            return list;
+        }*/
     }
 }
 
