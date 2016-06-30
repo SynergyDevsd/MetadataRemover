@@ -42,6 +42,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     public static HashMap<String, String> md;
 
+    //METADATA LAYOUT
+    TextView valueAperture;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //METADATA LAYOUT
         ImageView imagePreview = (ImageView)findViewById(R.id.imagePreview);
         TextView imageName = (TextView)findViewById(R.id.imageName);
-        TextView valueAperture = (TextView)findViewById(R.id.vl_aperture);
+        valueAperture = (TextView)findViewById(R.id.vl_aperture);
 
 
 
@@ -215,10 +218,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private void getMetadata(Uri imageUri) {
         try {
-            ExifInterface exifData=new ExifInterface(imageUri.getPath());
+            File fileDst = new File(imageUri.getPath());
+            ExifInterface exifData=new ExifInterface(fileDst.getAbsolutePath());
 
             md.clear();
-            
+
+            valueAperture.setText(exifData.getAttribute(ExifInterface.TAG_APERTURE));
             md.put(ExifInterface.TAG_APERTURE,exifData.getAttribute(ExifInterface.TAG_APERTURE));
             md.put(ExifInterface.TAG_DATETIME,exifData.getAttribute(ExifInterface.TAG_DATETIME));
             md.put(ExifInterface.TAG_EXPOSURE_TIME,exifData.getAttribute(ExifInterface.TAG_EXPOSURE_TIME));
@@ -245,7 +250,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             Log.e(TAG, "cannot read exif", ex);
             Toast.makeText(getApplicationContext(),"cannot clean exif: " + ex.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         } catch (Throwable t) {
-            Log.w(TAG, "cannot clean exif: ", t);
+            Log.w(TAG, "cannot clean exif: " + t.getMessage(), t);
             Toast.makeText(getApplicationContext(),"cannot clean exif: " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
     }
