@@ -10,4 +10,8 @@
     <string name="btn_pickImageBot">Select Images</string>
     <string name="btn_delMDBot">Delete Metadata</string>
     <string name="reminder_text">Edited images are saved in MetadataRemover Album</string>
+    <string name="no_image">No image selected</string>
+
+    <!-- Labels -->
+    <string name="lb_aperture">Aperture: </string>
 </resources>

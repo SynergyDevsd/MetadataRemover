@@ -1,30 +1,25 @@
 
 package save.your.privacy.metadataremover;
 
-import android.app.ListFragment;
 import android.content.Intent;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener,MediaScannerConnectionClient {
@@ -46,14 +41,13 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private MediaScannerConnection conn;
 
     public static HashMap<String, String> md;
-    public static MDAdapter mdAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Set interface elements
+        //BUTTONS
         Button btn_pickImage = (Button) findViewById(R.id.btn_pickImage);
         btn_pickImage.setOnClickListener(this);
         Button btn_delMD = (Button)findViewById(R.id.btn_delMD);
@@ -62,6 +56,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         btn_pickImageBot.setOnClickListener(this);
         Button btn_delMDBot = (Button)findViewById(R.id.btn_delMDBot);
         btn_delMDBot.setOnClickListener(this);
+
+        //METADATA LAYOUT
+        ImageView imagePreview = (ImageView)findViewById(R.id.imagePreview);
+        TextView imageName = (TextView)findViewById(R.id.imageName);
+        TextView valueAperture = (TextView)findViewById(R.id.vl_aperture);
+
 
 
         //ListView lv = (ListView) findViewById(R.id.lvMetadata);
@@ -114,7 +114,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
             //InputStream stream = getContentResolver().openInputStream(data.getData());
             getMetadata(imageUri);
-            mdAdapter.notifyDataSetChanged();
             /*File fileDst = new File(imageUri.getPath());
             new RemoveMetadata().execute(fileDst.getAbsolutePath());
 
@@ -219,6 +218,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             ExifInterface exifData=new ExifInterface(imageUri.getPath());
 
             md.clear();
+            
             md.put(ExifInterface.TAG_APERTURE,exifData.getAttribute(ExifInterface.TAG_APERTURE));
             md.put(ExifInterface.TAG_DATETIME,exifData.getAttribute(ExifInterface.TAG_DATETIME));
             md.put(ExifInterface.TAG_EXPOSURE_TIME,exifData.getAttribute(ExifInterface.TAG_EXPOSURE_TIME));
@@ -250,31 +250,5 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         }
     }
 
-    public static class ListMDFragment extends ListFragment {
-
-        /*public static ListMDFragment newInstance() {
-            return new ListMDFragment();
-        }*/
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-
-            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.fragment_list_mda, R.id.text);
-            md.put("key1","value1");
-            md.put("key2","value2");
-            mdAdapter = new MDAdapter(this.getActivity(),md);
-            setListAdapter(mdAdapter);
-            //adapter.addAll(createDataList(100));
-        }
-
-        /*private static List<String> createDataList(int counts) {
-            List<String> list = new ArrayList<String>();
-            for (int i = 0; i < counts; i++) {
-                list.add("i=" + i);
-            }
-            return list;
-        }*/
-    }
 }
 
