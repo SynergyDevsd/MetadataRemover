@@ -22,30 +22,11 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_delMDBot"
-        android:id="@+id/btn_delMDBot"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/btn_delMD"
-        android:layout_alignStart="@+id/btn_delMD" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_pickImageBot"
-        android:id="@+id/btn_pickImageBot"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/btn_delMDBot"
         android:layout_below="@+id/btn_pickImage">
 
         <ImageView
@@ -69,20 +50,412 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/lb_aperture"
-            android:id="@+id/textView"
+            android:id="@+id/lb_aperture"
             android:layout_below="@+id/imagePreview"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="37dp" />
+            android:layout_alignParentStart="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/vl_aperture"
-            android:layout_alignBottom="@+id/textView"
-            android:layout_toRightOf="@+id/textView"
-            android:layout_toEndOf="@+id/textView" />
+            android:layout_alignBottom="@+id/lb_aperture"
+            android:layout_toRightOf="@+id/lb_aperture"
+            android:layout_toEndOf="@+id/lb_aperture" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_datetime"
+            android:id="@+id/lb_datetime"
+            android:layout_alignBottom="@+id/lb_aperture"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_datetime"
+            android:layout_alignBottom="@+id/lb_datetime"
+            android:layout_toRightOf="@+id/lb_datetime"
+            android:layout_toEndOf="@+id/lb_datetime" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_exposureTime"
+            android:id="@+id/lb_exposureTime"
+            android:layout_below="@+id/lb_aperture"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_exposureTime"
+            android:layout_alignBottom="@+id/lb_exposureTime"
+            android:layout_toRightOf="@+id/lb_exposureTime"
+            android:layout_toEndOf="@+id/lb_exposureTime"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_flash"
+            android:id="@+id/lb_flash"
+            android:layout_alignBottom="@+id/lb_exposureTime"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_flash"
+            android:layout_alignBottom="@+id/lb_flash"
+            android:layout_toRightOf="@+id/lb_flash"
+            android:layout_toEndOf="@+id/lb_flash" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_focalLength"
+            android:id="@+id/lb_focalLength"
+            android:layout_below="@+id/lb_exposureTime"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_focalLength"
+            android:layout_centerVertical="true"
+            android:layout_alignBottom="@+id/lb_focalLength"
+            android:layout_toRightOf="@+id/lb_focalLength"
+            android:layout_toEndOf="@+id/lb_focalLength" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_imageLength"
+            android:id="@+id/lb_imageLength"
+            android:layout_alignBottom="@+id/lb_focalLength"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_imageLength"
+            android:layout_centerVertical="true"
+            android:layout_alignBottom="@+id/lb_imageLength"
+            android:layout_toRightOf="@+id/lb_imageLength"
+            android:layout_toEndOf="@+id/lb_imageLength"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_imageWidth"
+            android:id="@+id/lb_imageWidth"
+            android:layout_below="@+id/lb_focalLength"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_imageWidth"
+            android:layout_alignBottom="@+id/lb_imageWidth"
+            android:layout_toRightOf="@+id/lb_imageWidth"
+            android:layout_toEndOf="@+id/lb_imageWidth" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_iso"
+            android:id="@+id/lb_iso"
+            android:layout_alignBottom="@+id/lb_imageWidth"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_iso"
+            android:layout_alignBottom="@+id/lb_iso"
+            android:layout_toRightOf="@+id/lb_iso"
+            android:layout_toEndOf="@+id/lb_iso"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_make"
+            android:id="@+id/lb_make"
+            android:layout_below="@+id/lb_imageWidth"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_make"
+            android:layout_alignBottom="@+id/lb_make"
+            android:layout_toRightOf="@+id/lb_make"
+            android:layout_toEndOf="@+id/lb_make" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_model"
+            android:id="@+id/lb_model"
+            android:layout_alignBottom="@+id/lb_make"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_model"
+            android:layout_alignBottom="@+id/lb_model"
+            android:layout_toRightOf="@+id/lb_model"
+            android:layout_toEndOf="@+id/lb_model" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_orientation"
+            android:id="@+id/lb_orientation"
+            android:layout_below="@+id/lb_make"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_orientation"
+            android:layout_alignBottom="@+id/lb_orientation"
+            android:layout_toRightOf="@+id/lb_orientation"
+            android:layout_toEndOf="@+id/lb_orientation" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_whiteBalance"
+            android:id="@+id/lb_whiteBalance"
+            android:layout_alignBottom="@+id/lb_orientation"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_whiteBalance"
+            android:layout_alignBottom="@+id/lb_whiteBalance"
+            android:layout_toRightOf="@+id/lb_whiteBalance"
+            android:layout_toEndOf="@+id/lb_whiteBalance"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/lb_gps"
+            android:id="@+id/lb_gps"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/lb_whiteBalance"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsAltitude"
+            android:id="@+id/lb_altitude"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/lb_gps"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_altitude"
+            android:layout_alignBottom="@+id/lb_altitude"
+            android:layout_toRightOf="@+id/lb_altitude"
+            android:layout_toEndOf="@+id/lb_altitude" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsAltitudeRef"
+            android:id="@+id/lb_altitudeRef"
+            android:layout_alignBottom="@+id/lb_altitude"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_altitudeRef"
+            android:layout_alignBottom="@+id/lb_altitudeRef"
+            android:layout_toRightOf="@+id/lb_altitudeRef"
+            android:layout_toEndOf="@+id/lb_altitudeRef"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsLongitude"
+            android:id="@+id/lb_longitude"
+            android:layout_below="@+id/lb_altitude"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_longitude"
+            android:layout_alignBottom="@+id/lb_longitude"
+            android:layout_toRightOf="@+id/lb_longitude"
+            android:layout_toEndOf="@+id/lb_longitude" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsLongitudeRef"
+            android:id="@+id/lb_longitudeRef"
+            android:layout_alignBottom="@+id/lb_longitude"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_longitudeRef"
+            android:layout_alignBottom="@+id/lb_longitudeRef"
+            android:layout_toRightOf="@+id/lb_longitudeRef"
+            android:layout_toEndOf="@+id/lb_longitudeRef" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsLatitude"
+            android:id="@+id/lb_latitude"
+            android:layout_below="@+id/lb_longitude"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_latitude"
+            android:layout_alignBottom="@+id/lb_latitude"
+            android:layout_toRightOf="@+id/lb_latitude"
+            android:layout_toEndOf="@+id/lb_latitude" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsProcessingMethod"
+            android:id="@+id/lb_processingMethod"
+            android:layout_alignBottom="@+id/lb_latitude"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_processingMethod"
+            android:layout_alignBottom="@+id/lb_processingMethod"
+            android:layout_toRightOf="@+id/lb_processingMethod"
+            android:layout_toEndOf="@+id/lb_processingMethod" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsLatitudeRef"
+            android:id="@+id/lb_latitudeRef"
+            android:layout_below="@+id/lb_latitude"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_latitudeRef"
+            android:layout_alignBottom="@+id/lb_latitudeRef"
+            android:layout_toRightOf="@+id/lb_latitudeRef"
+            android:layout_toEndOf="@+id/lb_latitudeRef" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsDatestamp"
+            android:id="@+id/lb_datestamp"
+            android:layout_alignBottom="@+id/lb_latitudeRef"
+            android:layout_alignLeft="@+id/lb_gps"
+            android:layout_alignStart="@+id/lb_gps" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_datestamp"
+            android:layout_alignBottom="@+id/lb_datestamp"
+            android:layout_toRightOf="@+id/lb_datestamp"
+            android:layout_toEndOf="@+id/lb_datestamp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lb_gpsTimestamp"
+            android:id="@+id/lb_gpsTimestamp"
+            android:layout_below="@+id/lb_latitudeRef"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/vl_gpsTimestamp"
+            android:layout_alignBottom="@+id/lb_gpsTimestamp"
+            android:layout_toRightOf="@+id/lb_gpsTimestamp"
+            android:layout_toEndOf="@+id/lb_gpsTimestamp"/>
 
     </RelativeLayout>
 

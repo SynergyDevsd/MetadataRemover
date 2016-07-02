@@ -1,8 +1,13 @@
 
 package save.your.privacy.metadataremover;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
@@ -23,29 +28,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import save.your.privacy.metadataremover.Utils.ImageFilePath;
+
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener,MediaScannerConnectionClient {
 
-    private Uri mImageCaptureUri;
+    private String selectedImagePath;
 
     private static final int PICK_IMAGE = 1;
-    private static final int EXIF_IMAGE = 2;
-
-    private String appFolder ="MetadataRemover";
 
     private final String TAG = "MainActivity";
 
 
-    public String[] allFiles;
     private String SCAN_PATH ;
     private static final String FILE_TYPE="image/*";
 
     private MediaScannerConnection conn;
 
-    public static HashMap<String, String> md;
-
     //METADATA LAYOUT
-    TextView valueAperture;
+    private TextView valueAperture,valueDatetime,valueExposureTime,valueFlash,valueFocalLength,valueGPSAltitude,
+                    valueGPSAltitudeRef,valueGPSLatitude,valueGPSLatitudeRef,valueGPSLongitude,
+                    valueGPSLongitudeRef,valueGPSTimestamp,valueGPSProcessingMethod,valueGPSDatestamp,
+                    valueImageLength,valueImageWidth,valueISO,valueMake,valueModel,valueWhiteBalance,
+                    valueOrientation;
+    ImageView imagePreview;
+    TextView imageName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +65,31 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         btn_pickImage.setOnClickListener(this);
         Button btn_delMD = (Button)findViewById(R.id.btn_delMD);
         btn_delMD.setOnClickListener(this);
-        Button btn_pickImageBot = (Button) findViewById(R.id.btn_pickImageBot);
-        btn_pickImageBot.setOnClickListener(this);
-        Button btn_delMDBot = (Button)findViewById(R.id.btn_delMDBot);
-        btn_delMDBot.setOnClickListener(this);
 
         //METADATA LAYOUT
-        ImageView imagePreview = (ImageView)findViewById(R.id.imagePreview);
-        TextView imageName = (TextView)findViewById(R.id.imageName);
+        imagePreview = (ImageView)findViewById(R.id.imagePreview);
+        imageName = (TextView)findViewById(R.id.imageName);
         valueAperture = (TextView)findViewById(R.id.vl_aperture);
-
-
-
-        //ListView lv = (ListView) findViewById(R.id.lvMetadata);
+        valueDatetime = (TextView)findViewById(R.id.vl_datetime);
+        valueExposureTime = (TextView)findViewById(R.id.vl_exposureTime);
+        valueFlash = (TextView)findViewById(R.id.vl_flash);
+        valueFocalLength = (TextView)findViewById(R.id.vl_focalLength);
+        valueGPSAltitude = (TextView)findViewById(R.id.vl_altitude);
+        valueGPSAltitudeRef = (TextView)findViewById(R.id.vl_altitudeRef);
+        valueGPSDatestamp = (TextView)findViewById(R.id.vl_datestamp);
+        valueGPSLatitude = (TextView)findViewById(R.id.vl_latitude);
+        valueGPSLatitudeRef = (TextView)findViewById(R.id.vl_latitudeRef);
+        valueGPSLongitude = (TextView)findViewById(R.id.vl_longitude);
+        valueGPSLongitudeRef = (TextView)findViewById(R.id.vl_longitudeRef);
+        valueGPSProcessingMethod = (TextView)findViewById(R.id.vl_processingMethod);
+        valueGPSTimestamp = (TextView)findViewById(R.id.vl_gpsTimestamp);
+        valueImageLength = (TextView)findViewById(R.id.vl_imageLength);
+        valueImageWidth = (TextView)findViewById(R.id.vl_imageWidth);
+        valueISO  = (TextView)findViewById(R.id.vl_iso);
+        valueMake = (TextView)findViewById(R.id.vl_make);
+        valueModel = (TextView)findViewById(R.id.vl_model);
+        valueWhiteBalance = (TextView)findViewById(R.id.vl_whiteBalance);
+        valueOrientation = (TextView)findViewById(R.id.vl_orientation);
 
     }
 
@@ -114,60 +134,17 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         String path     = "";
 
         if (requestCode == PICK_IMAGE) {
+            if (null == data)
+                return;
+            Uri selectedImageUri = data.getData();
+            imagePreview.setImageBitmap(MediaStore.Images.Thumbnails.getThumbnail(
+                    getContentResolver(), Long.parseLong(selectedImageUri.getLastPathSegment().replace("image:","")),
+                    MediaStore.Images.Thumbnails.MICRO_KIND,
+                    (BitmapFactory.Options) null ));
+            selectedImagePath = getPath(selectedImageUri);
+            imageName.setText(selectedImagePath.substring(selectedImagePath.lastIndexOf("/")+1));
+            showMetadata(selectedImagePath);
 
-            Uri imageUri =  data.getData();
-            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            //InputStream stream = getContentResolver().openInputStream(data.getData());
-            getMetadata(imageUri);
-            /*File fileDst = new File(imageUri.getPath());
-            new RemoveMetadata().execute(fileDst.getAbsolutePath());
-
-            Toast.makeText(getApplicationContext(),"Removed metadata from the image",Toast.LENGTH_LONG).show();*/
-            // The data to show
-            /*List<Map<String,String>> testList = new ArrayList<>();
-            testList.add(md);*/
-            //planetsList.add(md);
-            /*List<Map<String,String>> testList = new ArrayList<>();
-            for (String key : md.keySet()) {
-                // ...
-                testList.add(key);
-            }
-            for (Map.Entry<String, String> entry : md.entrySet()) {
-                testList.add(new Mapentry);
-                // ...
-            }
-            private HashMap<String, String> listMD(String key, String name) {
-                HashMap<String, String> md = new HashMap<String, String>();
-                md.put(key, name);
-                return md;
-            }*/
-            /*testList.add(md.   md.get(ExifInterface.TAG_APERTURE));
-            testList.add(md.get(ExifInterface.TAG_DATETIME));
-            testList.add(md.get(ExifInterface.TAG_MODEL));*/
-
-            /*private HashMap<String, String> createPlanet(String key, String name) {
-                HashMap<String, String> planet = new HashMap<String, String>();
-                planet.put(key, name);
-
-                return planet;
-            }*/
-            // This is a simple adapter that accepts as parameter
-// Context
-// Data list
-// The row layout that is used during the row creation
-// The keys used to retrieve the data
-// The View id used to show the data. The key number and the view id must match
-
-
-        } else if (requestCode == EXIF_IMAGE){
-
-            Uri imageUri =  data.getData();
-            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            //InputStream stream = getContentResolver().openInputStream(data.getData());
-            File fileDst = new File(imageUri.getPath());
-            new RemoveMetadata().execute(fileDst.getAbsolutePath());
-
-            Toast.makeText(getApplicationContext(),"Removed metadata from the photo",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -183,14 +160,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                 startActivityForResult(Intent.createChooser(intentGallery, "Complete action using"), PICK_IMAGE);
                 break;
-            /*case R.id.btn_seeMetadata:
-                Intent intentMetadata = new Intent();
-
-                intentMetadata.setType("image/*");
-                intentMetadata.setAction(Intent.ACTION_GET_CONTENT);
-
-                startActivityForResult(Intent.createChooser(intentMetadata, "Complete action using"), EXIF_IMAGE);
-                break;*/
+            case R.id.btn_delMD:
+                new RemoveMetadata(this).execute(selectedImagePath);
+                showMetadata(selectedImagePath);
+                //
+                break;
         }
     }
 
@@ -218,34 +192,31 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         }
     }
 
-    private void getMetadata(Uri imageUri) {
+    public void showMetadata(String imagePath) {
         try {
-            ExifInterface exifData=new ExifInterface(getPath(imageUri));
-
-            md.clear();
+            ExifInterface exifData=new ExifInterface(imagePath);
 
             valueAperture.setText(exifData.getAttribute(ExifInterface.TAG_APERTURE));
-            md.put(ExifInterface.TAG_APERTURE,exifData.getAttribute(ExifInterface.TAG_APERTURE));
-            md.put(ExifInterface.TAG_DATETIME,exifData.getAttribute(ExifInterface.TAG_DATETIME));
-            md.put(ExifInterface.TAG_EXPOSURE_TIME,exifData.getAttribute(ExifInterface.TAG_EXPOSURE_TIME));
-            md.put(ExifInterface.TAG_FLASH,exifData.getAttribute(ExifInterface.TAG_FLASH));
-            md.put(ExifInterface.TAG_FOCAL_LENGTH,exifData.getAttribute(ExifInterface.TAG_FOCAL_LENGTH));
-            md.put(ExifInterface.TAG_GPS_ALTITUDE,exifData.getAttribute(ExifInterface.TAG_GPS_ALTITUDE));
-            md.put(ExifInterface.TAG_GPS_ALTITUDE_REF,exifData.getAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF));
-            md.put(ExifInterface.TAG_GPS_LATITUDE,exifData.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
-            md.put(ExifInterface.TAG_GPS_LATITUDE_REF,exifData.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF));
-            md.put(ExifInterface.TAG_GPS_LONGITUDE,exifData.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
-            md.put(ExifInterface.TAG_GPS_LONGITUDE_REF,exifData.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF));
-            md.put(ExifInterface.TAG_GPS_TIMESTAMP,exifData.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP));
-            md.put(ExifInterface.TAG_GPS_PROCESSING_METHOD,exifData.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD));
-            md.put(ExifInterface.TAG_GPS_DATESTAMP,exifData.getAttribute(ExifInterface.TAG_GPS_DATESTAMP));
-            md.put(ExifInterface.TAG_IMAGE_LENGTH,exifData.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
-            md.put(ExifInterface.TAG_IMAGE_WIDTH,exifData.getAttribute(ExifInterface.TAG_IMAGE_WIDTH));
-            md.put(ExifInterface.TAG_ISO,exifData.getAttribute(ExifInterface.TAG_ISO));
-            md.put(ExifInterface.TAG_MAKE,exifData.getAttribute(ExifInterface.TAG_MAKE));
-            md.put(ExifInterface.TAG_MODEL,exifData.getAttribute(ExifInterface.TAG_MODEL));
-            md.put(ExifInterface.TAG_WHITE_BALANCE,exifData.getAttribute(ExifInterface.TAG_WHITE_BALANCE));
-            md.put(ExifInterface.TAG_ORIENTATION,exifData.getAttribute(ExifInterface.TAG_ORIENTATION));
+            valueDatetime.setText(exifData.getAttribute(ExifInterface.TAG_DATETIME));
+            valueExposureTime.setText(exifData.getAttribute(ExifInterface.TAG_EXPOSURE_TIME));
+            valueFlash.setText(exifData.getAttribute(ExifInterface.TAG_FLASH));
+            valueFocalLength.setText(exifData.getAttribute(ExifInterface.TAG_FOCAL_LENGTH));
+            valueGPSAltitude.setText(exifData.getAttribute(ExifInterface.TAG_GPS_ALTITUDE));
+            valueGPSAltitudeRef.setText(exifData.getAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF));
+            valueGPSLatitude.setText(exifData.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
+            valueGPSLatitudeRef.setText(exifData.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF));
+            valueGPSLongitude.setText(exifData.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
+            valueGPSLongitudeRef.setText(exifData.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF));
+            valueGPSTimestamp.setText(exifData.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP));
+            valueGPSProcessingMethod.setText(exifData.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD));
+            valueGPSDatestamp.setText(exifData.getAttribute(ExifInterface.TAG_GPS_DATESTAMP));
+            valueImageLength.setText(exifData.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
+            valueImageWidth.setText(exifData.getAttribute(ExifInterface.TAG_IMAGE_WIDTH));
+            valueISO.setText(exifData.getAttribute(ExifInterface.TAG_ISO));
+            valueMake.setText(exifData.getAttribute(ExifInterface.TAG_MAKE));
+            valueModel.setText(exifData.getAttribute(ExifInterface.TAG_MODEL));
+            valueWhiteBalance.setText(exifData.getAttribute(ExifInterface.TAG_WHITE_BALANCE));
+            valueOrientation.setText(exifData.getAttribute(ExifInterface.TAG_ORIENTATION));
 
         } catch (IOException ex) {
             Log.e(TAG, "cannot read exif", ex);
@@ -259,25 +230,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     /**
      * helper to retrieve the path of an image URI
      */
-    public String getPath(Uri uri) {
-        // just some safety built in
-        if( uri == null ) {
-            // TODO perform some logging or show user feedback
-            return null;
-        }
-        // try to retrieve the image from the media store first
-        // this will only work for images selected from gallery
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        if( cursor != null ){
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        }
-        // this is our fallback here
-        return uri.getPath();
+    public String getPath(Uri selectedImageUri) {
+        System.out.println(selectedImageUri.toString());
+        // MEDIA GALLERY
+        String selectedImagePath = ImageFilePath.getPath(
+                this, selectedImageUri);
+        Log.i("Image File Path", "" + selectedImagePath);
+        System.out.println("Image Path ="+selectedImagePath);
+        return selectedImagePath;
     }
-
 }
 

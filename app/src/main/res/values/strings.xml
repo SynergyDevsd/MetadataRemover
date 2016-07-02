@@ -1,17 +1,35 @@
 <resources>
     <string name="app_name">MetadataRemover</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <string name="top_text">Clean images metadata</string>
     <string name="btn_pickImage">Select Images</string>
     <string name="btn_delMD">Delete Metadata</string>
     <string name="btn_pickImageBot">Select Images</string>
     <string name="btn_delMDBot">Delete Metadata</string>
-    <string name="reminder_text">Edited images are saved in MetadataRemover Album</string>
     <string name="no_image">No image selected</string>
 
+    <string name="lb_gps">GPS</string>
     <!-- Labels -->
     <string name="lb_aperture">Aperture: </string>
+    <string name="lb_datetime">Datetime: </string>
+    <string name="lb_exposureTime">Exposure time: </string>
+    <string name="lb_flash">Flash: </string>
+    <string name="lb_focalLength">Focal length: </string>
+    <string name="lb_imageLength">Image length: </string>
+    <string name="lb_imageWidth">Image width: </string>
+    <string name="lb_iso">Iso: </string>
+    <string name="lb_make">Make: </string>
+    <string name="lb_model">Model: </string>
+    <string name="lb_whiteBalance">White balance: </string>
+    <string name="lb_orientation">Orientation: </string>
+    <string name="lb_gpsAltitude">Altitude: </string>
+    <string name="lb_gpsAltitudeRef">Altitude Ref: </string>
+    <string name="lb_gpsLatitude">Latitude: </string>
+    <string name="lb_gpsLatitudeRef">Latitude Ref: </string>
+    <string name="lb_gpsLongitude">Longitude: </string>
+    <string name="lb_gpsLongitudeRef">Longitude Ref: </string>
+    <string name="lb_gpsTimestamp">Timestamp: </string>
+    <string name="lb_gpsProcessingMethod">Proc. method: </string>
+    <string name="lb_gpsDatestamp">Datestamp: </string>
+
 </resources>

@@ -1,8 +1,10 @@
 package save.your.privacy.metadataremover;
 
+import android.content.Context;
 import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -11,13 +13,19 @@ import java.io.IOException;
  */
 public class RemoveMetadata extends AsyncTask<String,Void,Boolean> {
     private final String TAG = "RemoveMetadata";
+    private Context mContext;
+    private String selectImagePath;
 
+    public RemoveMetadata(Context context){
+        mContext = context;
+    }
     @Override
     protected Boolean doInBackground(String... filePath){
         if (null == filePath[0]) return false;
         try {
 
-            ExifInterface exifData=new ExifInterface(filePath[0]);
+            selectImagePath = filePath[0];
+            ExifInterface exifData=new ExifInterface(selectImagePath);
 
             exifData.setAttribute(ExifInterface.TAG_APERTURE, "0"); //rational64u
             exifData.setAttribute(ExifInterface.TAG_DATETIME, ""); //string
@@ -31,7 +39,7 @@ public class RemoveMetadata extends AsyncTask<String,Void,Boolean> {
             exifData.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, "0/0,0/0,000000/00000 " ); //rational64u
             exifData.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF, "0" ); //sting[2]
             exifData.setAttribute(ExifInterface.TAG_GPS_TIMESTAMP, "0:0:0 " ); //rational64u[3]
-            exifData.setAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD, "0" ); //undef
+            //exifData.setAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD, "0" ); //undef
             exifData.setAttribute(ExifInterface.TAG_GPS_DATESTAMP, " " ); //string[11]
             exifData.setAttribute(ExifInterface.TAG_IMAGE_LENGTH, "0" ); //int32u
             exifData.setAttribute(ExifInterface.TAG_IMAGE_WIDTH, "0" ); //int32u
@@ -52,5 +60,11 @@ public class RemoveMetadata extends AsyncTask<String,Void,Boolean> {
             return false;
         }
         return true;
+    }
+    @Override
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+        ((MainActivity) mContext).showMetadata(selectImagePath);
+        Toast.makeText(mContext.getApplicationContext(),"Removed metadata from the photo",Toast.LENGTH_LONG).show();
     }
 }
