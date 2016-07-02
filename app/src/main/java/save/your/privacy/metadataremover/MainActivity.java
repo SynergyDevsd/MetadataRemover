@@ -162,8 +162,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             case R.id.btn_delMD:
                 new RemoveMetadata(this).execute(selectedImagePath);
-                showMetadata(selectedImagePath);
-                //
                 break;
         }
     }
